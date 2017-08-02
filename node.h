@@ -68,9 +68,6 @@ public:
     void addEdge(Edge *edge);
     QList<Edge *> edges() const;
 
-//    enum { Type = UserType + 1 };
-//    int type() const override { return Type; }
-
 //    void calculateForces();
 //    bool advance();
     void click();

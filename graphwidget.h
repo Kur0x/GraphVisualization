@@ -11,9 +11,11 @@ class GraphWidget : public QGraphicsView
 
 public:
     GraphWidget(QWidget *parent = 0);
-
+    void setNode(Node *node,int no);
+    void addEdge();
     void itemMoved();
-    friend class Node;
+    bool addEdgeFun=false;
+    bool addNodeFun=false;
 public slots:
     void addNodeSlot(bool b);
     void addEdgeSlot(bool b);
@@ -35,8 +37,6 @@ private:
     int timerId;
     QList<Node*> nodes;
     QGraphicsScene *scene;
-    bool addEdge=false;
-    bool addNode=false;
     Node *node1;
     Node *node2;
 };

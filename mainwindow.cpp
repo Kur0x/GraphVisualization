@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     widget = new GraphWidget;
     ui->setupUi(this);
-
+    setWindowTitle("GraphVisualization");
     ui->gridLayout->addWidget(widget);
      createToolBar();    //创建一个工具栏
 }

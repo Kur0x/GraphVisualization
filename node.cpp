@@ -77,20 +77,15 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
 void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     static bool select2=false;
-    if(graph->addEdge){
+    if(graph->addEdgeFun){
         if(!select2){
-            graph->node1=this;
-            graph->node1->click();
-            qDebug()<<this;
-            qDebug()<<"1";
+            graph->setNode(this,1);
             select2=true;
         }
         else{
-            graph->node2=this;
-            graph->node2->click();
-            qDebug()<<this;
-            qDebug()<<"2";
+            graph->setNode(this,2);
             select2=false;
+            graph->addEdge();
         }
     }
 

@@ -13,32 +13,60 @@ GraphWidget::GraphWidget(QWidget *parent)
     : QGraphicsView(parent), timerId(0)
 {
     scene = new QGraphicsScene(this);
-//    QGraphicsView::fitInView();
+    //    QGraphicsView::fitInView();
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
-//    int a=parent->frameSize().width();
+    //    int a=parent->frameSize().width();
     scene->setSceneRect(0, 0,400 ,400);
     setScene(scene);
     setCacheMode(CacheBackground);
     setViewportUpdateMode(BoundingRectViewportUpdate);
     setRenderHint(QPainter::Antialiasing);
     setTransformationAnchor(AnchorUnderMouse);
-//    scale(qreal(1), qreal(1));
+    //    scale(qreal(1), qreal(1));
 
     setMinimumSize(400, 400);
 
-//    Node *node1 = new Node(this);
-//    Node *node2 = new Node(this);
-//    nodes<<node1;
-//    nodes<<node2;
-//    scene->addItem(node1);
-//    scene->addItem(node2);
+    //    Node *node1 = new Node(this);
+    //    Node *node2 = new Node(this);
+    //    nodes<<node1;
+    //    nodes<<node2;
+    //    scene->addItem(node1);
+    //    scene->addItem(node2);
 
-//    scene->addItem(new Edge(node1, node2));
+    //    scene->addItem(new Edge(node1, node2));
 
 
-//    node1->setPos(50, 50);
-//    node2->setPos(0, 0);
+    //    node1->setPos(50, 50);
+    //    node2->setPos(0, 0);
 
+}
+
+void GraphWidget::setNode(Node *node, int no)
+{
+    if(no==1){
+        node1=node;
+    }
+    else{
+        node2=node;
+    }
+    node->click();
+}
+
+void GraphWidget::addEdge()
+{
+    bool already_connected=false;
+    for(const Edge *edge : node1->edges()){
+        if(edge->destNode()==node2){
+            already_connected=true;
+            break;
+        }
+    }
+    if(!(node1==node2||already_connected))
+        scene->addItem(new Edge(node1, node2));
+    node1->click();
+    node2->click();
+    node1=NULL;
+    node2=NULL;
 }
 
 void GraphWidget::itemMoved()
@@ -49,12 +77,12 @@ void GraphWidget::itemMoved()
 
 void GraphWidget::addNodeSlot(bool b)
 {
-    addNode=b;
+    addNodeFun=b;
 }
 
 void GraphWidget::addEdgeSlot(bool b)
 {
-    addEdge=b;
+    addEdgeFun=b;
 }
 
 
@@ -63,22 +91,22 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
     //!TODO: add
     switch (event->key()) {
     case Qt::Key_Up:
-//        centerNode->moveBy(0, -20);
+        //        centerNode->moveBy(0, -20);
         break;
     case Qt::Key_Down:
-//        centerNode->moveBy(0, 20);
+        //        centerNode->moveBy(0, 20);
         break;
     case Qt::Key_Left:
-//        centerNode->moveBy(-20, 0);
+        //        centerNode->moveBy(-20, 0);
         break;
     case Qt::Key_Right:
-//        centerNode->moveBy(20, 0);
+        //        centerNode->moveBy(20, 0);
         break;
     case Qt::Key_Plus:
-//        zoomIn();
+        //        zoomIn();
         break;
     case Qt::Key_Minus:
-//        zoomOut();
+        //        zoomOut();
         break;
     case Qt::Key_Space:
     case Qt::Key_Enter:
@@ -90,17 +118,17 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
 
 void GraphWidget::mousePressEvent(QMouseEvent *event)
 {
-    if(addNode){
+    if(addNodeFun){
         Node *node=new Node(this);
         node->setPos(event->pos().x()-5,event->pos().y()-22);
         nodes<<node;
         scene->addItem(node);
     }
-    if(addEdge){
-        QWidget *action = QApplication::widgetAt(event->globalPos());
-//        qDebug()<<action;
+    //    if(addEdge){
+    //        QWidget *action = QApplication::widgetAt(event->globalPos());
+    //        qDebug()<<action;
 
-    }
+    //    }
     QGraphicsView::mousePressEvent(event);
 }
 
@@ -128,16 +156,16 @@ void GraphWidget::drawBackground(QPainter *painter, const QRectF &rect)
 {
     Q_UNUSED(rect);
 
-//    // Shadow
+    //    // Shadow
     QRectF sceneRect = this->sceneRect();
-//    QRectF rightShadow(sceneRect.right(), sceneRect.top() + 5, 5, sceneRect.height());
-//    QRectF bottomShadow(sceneRect.left() + 5, sceneRect.bottom(), sceneRect.width(), 5);
-//    if (rightShadow.intersects(rect) || rightShadow.contains(rect))
-//        painter->fillRect(rightShadow, Qt::darkGray);
-//    if (bottomShadow.intersects(rect) || bottomShadow.contains(rect))
-//        painter->fillRect(bottomShadow, Qt::darkGray);
+    //    QRectF rightShadow(sceneRect.right(), sceneRect.top() + 5, 5, sceneRect.height());
+    //    QRectF bottomShadow(sceneRect.left() + 5, sceneRect.bottom(), sceneRect.width(), 5);
+    //    if (rightShadow.intersects(rect) || rightShadow.contains(rect))
+    //        painter->fillRect(rightShadow, Qt::darkGray);
+    //    if (bottomShadow.intersects(rect) || bottomShadow.contains(rect))
+    //        painter->fillRect(bottomShadow, Qt::darkGray);
 
-//     Fill
+    //     Fill
 
     painter->fillRect(rect.intersected(sceneRect), Qt::white);
     painter->setBrush(Qt::NoBrush);

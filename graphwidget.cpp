@@ -51,6 +51,10 @@ void GraphWidget::setNode(Node *node, int no)
     }
     node->click();
 }
+void GraphWidget::removeItem(QGraphicsItem * item){
+    scene->removeItem(item);
+    update();
+}
 
 void GraphWidget::addEdge()
 {
@@ -62,11 +66,12 @@ void GraphWidget::addEdge()
         }
     }
     if(!(node1==node2||already_connected))
-        scene->addItem(new Edge(node1, node2));
+        scene->addItem(new Edge(node1, node2,this));
     node1->click();
     node2->click();
     node1=NULL;
     node2=NULL;
+    update();
 }
 
 void GraphWidget::itemMoved()
@@ -83,6 +88,11 @@ void GraphWidget::addNodeSlot(bool b)
 void GraphWidget::addEdgeSlot(bool b)
 {
     addEdgeFun=b;
+}
+
+void GraphWidget::EraserSlot(bool b)
+{
+    EraserFun=b;
 }
 
 

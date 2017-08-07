@@ -1,23 +1,58 @@
 #include "edge.h"
 #include "node.h"
+#include "graphwidget.h"
 
 #include <math.h>
-
+#include <QVector>
 #include <QPainter>
+#include <QPolygonF>
+#include <QPointF>
+#include <QPoint>
+#include <QDebug>
 
 static const double Pi = 3.14159265358979323846264338327950288419717;
 static double TwoPi = 2.0 * Pi;
 
 
-Edge::Edge(Node *sourceNode, Node *destNode)
-    : arrowSize(10)
+Edge::Edge(Node *sourceNode, Node *destNode,GraphWidget *graphWidget)
+    : arrowSize(10), graph(graphWidget)
 {
-    setAcceptedMouseButtons(0);
+//    setFlag(ItemIsMovable);
+    setFlag(ItemIsSelectable);
+    setFlag(ItemSendsGeometryChanges);
+    setCacheMode(DeviceCoordinateCache);
+    setZValue(-1);
+
+//    setAcceptedMouseButtons(0);
     source = sourceNode;
     dest = destNode;
     source->addEdge(this);
     dest->addEdge(this);
     adjust();
+}
+
+QPainterPath Edge::shape() const
+{
+    QPainterPath path;
+    QVector<QPointF> points;
+    QLineF line(sourcePoint, destPoint);
+    double ExpandSize = 10;
+    double angle = ::acos(line.dx() / line.length());
+    if (line.dy() >= 0)
+        angle = 2*Pi - angle;
+    QPointF P1 = sourcePoint + QPointF(sin(angle + Pi / 3) * ExpandSize,
+                                                  cos(angle + Pi / 3) * ExpandSize);
+    QPointF P2 = sourcePoint + QPointF(sin(angle + Pi - Pi / 3) * ExpandSize,
+                                                  cos(angle + Pi - Pi / 3) * ExpandSize);
+    QPointF P3 = destPoint + QPointF(sin(angle - Pi / 3) * ExpandSize,
+                                              cos(angle - Pi / 3) * ExpandSize);
+    QPointF P4 = destPoint + QPointF(sin(angle - Pi + Pi / 3) * ExpandSize,
+                                              cos(angle - Pi + Pi / 3) * ExpandSize);
+
+    points << P1 << P2 << P3 << P4;
+    QPolygonF p(points);
+    path.addPolygon(p);
+    return path;
 }
 
 Node *Edge::sourceNode() const
@@ -28,6 +63,13 @@ Node *Edge::sourceNode() const
 Node *Edge::destNode() const
 {
     return dest;
+}
+
+void Edge::remove()
+{
+    source->removeEdge(this);
+    dest->removeEdge(this);
+    graph->removeItem(this);
 }
 
 void Edge::adjust()
@@ -49,10 +91,7 @@ void Edge::adjust()
     }
 }
 
-void Edge::drawLine()
-{
 
-}
 
 QRectF Edge::boundingRect() const
 {
@@ -80,4 +119,16 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
     painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter->drawLine(line);
 
+}
+
+void Edge::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    if(graph->EraserFun){
+        qDebug()<<"delete edge";
+        remove();
+//        delete this;
+    }
+
+    update();
+    QGraphicsItem::mousePressEvent(event);
 }

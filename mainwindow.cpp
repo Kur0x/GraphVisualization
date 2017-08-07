@@ -36,15 +36,20 @@ void MainWindow::createToolBar()
     selectAct->setStatusTip(tr("Please click the graph area to create a new node"));
 
 
-    const QIcon addNodeIcon =  QIcon(":/images/icons8-Circle-32.png");
+    const QIcon addNodeIcon =  QIcon(":/images/icons8-Circle-64.png");
     QAction *addNodeAct = new QAction(addNodeIcon, tr("Node"), anActionGroup);
     addNodeAct->setStatusTip(tr("Please click the graph area to create a new node"));
     connect(addNodeAct, &QAction::toggled, widget, &GraphWidget::addNodeSlot);
 
-    const QIcon addEdgeIcon =  QIcon(":/images/icons8-Line-32.png");
+    const QIcon addEdgeIcon =  QIcon(":/images/icons8-Line-64.png");
     QAction *addEdgeAct = new QAction(addEdgeIcon, tr("Edge"), anActionGroup);
     addEdgeAct->setStatusTip(tr("Please click two nodes to add a new edge"));
     connect(addEdgeAct, &QAction::toggled, widget, &GraphWidget::addEdgeSlot);
+
+    const QIcon EraserIcon =  QIcon(":/images/icons8-Eraser-48.png");
+    QAction *EraserAct = new QAction(EraserIcon, tr("Eraser"), anActionGroup);
+    EraserAct->setStatusTip(tr("Please click a node or edge to delete"));
+    connect(EraserAct, &QAction::toggled, widget, &GraphWidget::EraserSlot);
 
     foreach(QAction *action,anActionGroup->actions())
         action->setCheckable(true);

@@ -1,7 +1,8 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/icons8-Circle-32.png</file>
-        <file>images/icons8-Line-32.png</file>
         <file>images/icons8-Cursor-64.png</file>
+        <file>images/icons8-Circle-64.png</file>
+        <file>images/icons8-Line-64.png</file>
+        <file>images/icons8-Eraser-48.png</file>
     </qresource>
 </RCC>

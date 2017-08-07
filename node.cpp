@@ -24,6 +24,11 @@ void Node::addEdge(Edge *edge)
     edgeList << edge;
     edge->adjust();
 }
+void Node::removeEdge(Edge *edge)
+{
+    edgeList.removeOne(edge);
+    edge->adjust();
+}
 
 QList<Edge *> Node::edges() const
 {
@@ -49,7 +54,7 @@ QPainterPath Node::shape() const
     return path;
 }
 
-void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *)
+void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem * /* option */, QWidget *)
 {
 
 
@@ -88,7 +93,13 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
             graph->addEdge();
         }
     }
-
+    else if(graph->EraserFun){
+        qDebug()<<"delete node";
+        foreach (Edge *edge, edgeList) {
+            edge->remove();
+        }
+        graph->removeItem(this);
+    }
     update();
     QGraphicsItem::mousePressEvent(event);
 }

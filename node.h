@@ -54,9 +54,9 @@
 #include <QGraphicsItem>
 #include <QList>
 
+QT_BEGIN_NAMESPACE
 class Edge;
 class GraphWidget;
-QT_BEGIN_NAMESPACE
 class QGraphicsSceneMouseEvent;
 QT_END_NAMESPACE
 
@@ -66,6 +66,7 @@ public:
     Node(GraphWidget *graphWidget);
 
     void addEdge(Edge *edge);
+    void removeEdge(Edge *edge);
     QList<Edge *> edges() const;
 
 //    void calculateForces();

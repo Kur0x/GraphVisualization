@@ -4,29 +4,28 @@
 #include <QGraphicsItem>
 
 class Node;
+class GraphWidget;
 
-//! [0]
 class Edge : public QGraphicsItem
 {
 public:
-    Edge(Node *sourceNode, Node *destNode);
-
+    Edge(Node *sourceNode, Node *destNode,GraphWidget *graphWidget);
+    QPainterPath shape() const override;
     Node *sourceNode() const;
     Node *destNode() const;
-
+    void remove();
     void adjust();
 
 //    enum { Type = UserType + 2 };
 //    int type() const override { return Type; }
-public slots:
-    void drawLine();
+
 protected:
     QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 private:
     Node *source, *dest;
-
+    GraphWidget *graph;
     QPointF sourcePoint;
     QPointF destPoint;
     qreal arrowSize;

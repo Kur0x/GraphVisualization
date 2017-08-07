@@ -13,12 +13,15 @@ public:
     GraphWidget(QWidget *parent = 0);
     void setNode(Node *node,int no);
     void addEdge();
+    void removeItem(QGraphicsItem * item);
     void itemMoved();
     bool addEdgeFun=false;
     bool addNodeFun=false;
+    bool EraserFun=false;
 public slots:
     void addNodeSlot(bool b);
     void addEdgeSlot(bool b);
+    void EraserSlot(bool b);
 //    void zoomOut();
 
 protected:

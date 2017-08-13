@@ -1,25 +1,49 @@
 #include "mainwindow.h"
+#include "ui_mainwindow.h"
+
+#include "node.h"
 #include "edge.h"
 #include "graphwidget.h"
-#include "ui_mainwindow.h"
 
 #include <QToolBar>
 #include <QDebug>
+#include <QFileDialog>
+#include <QFile>
+#include <QPushButton>
+#include <QColorDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    widget = new GraphWidget;
+    widget = new GraphWidget(this,700,700);
     ui->setupUi(this);
     setWindowTitle("GraphVisualization");
-    ui->gridLayout->addWidget(widget);
-     createToolBar();    //创建一个工具栏
+    ui->graphLayout->addWidget(widget);
+    createToolBar();    //创建一个工具栏
+
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::setNodeAttr(Node *node)
+{
+    QPalette p,q;
+    p.setColor(QPalette::Button, node->getColor());
+    qDebug()<<node->getColor();
+    ui->setColorButton->setPalette(p);
+    ui->setColorButton->setFlat(true);
+    q.setColor(QPalette::Button, node->getColor2());
+    ui->setColorButton_2->setPalette(q);
+    if(node->getColor2()==Qt::white)
+        ui->setColorButton_2->setFlat(false);
+    else
+        ui->setColorButton_2->setFlat(true);
+
+    ui->name->setText(node->getText());
 }
 
 
@@ -49,7 +73,7 @@ void MainWindow::createToolBar()
     const QIcon EraserIcon =  QIcon(":/images/icons8-Eraser-48.png");
     QAction *EraserAct = new QAction(EraserIcon, tr("Eraser"), anActionGroup);
     EraserAct->setStatusTip(tr("Please click a node or edge to delete"));
-    connect(EraserAct, &QAction::toggled, widget, &GraphWidget::EraserSlot);
+    connect(EraserAct, &QAction::toggled, widget, &GraphWidget::eraserSlot);
 
     foreach(QAction *action,anActionGroup->actions())
         action->setCheckable(true);
@@ -58,7 +82,54 @@ void MainWindow::createToolBar()
 
 }
 
-void MainWindow::on_pushButton_clicked()
+
+void MainWindow::on_testButton_clicked()
 {
-    qDebug() << "C2ebug Message";
+
+}
+
+void MainWindow::on_open_triggered()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,"","",tr("Graph (*.graph)"));
+    widget->open(fileName);
+}
+
+void MainWindow::on_save_triggered()
+{
+    QString fileName = QFileDialog::getSaveFileName(this,"","",tr("Graph (*.graph)"));
+    widget->save(fileName);
+
+}
+
+void MainWindow::on_setColorButton_clicked()
+{
+    QColor chosenColor = QColorDialog::getColor();
+    QPalette p;
+    p.setColor(QPalette::Button, chosenColor);
+//    qDebug()<<chosenColor;
+    ui->setColorButton->setPalette(p);
+//    ui->setColorButton->setAutoFillBackground(true);
+    if(widget->getNode()){
+        widget->getNode()->setColor(chosenColor);
+    }
+}
+
+void MainWindow::on_name_textChanged(const QString &arg1)
+{
+        if(widget->getNode()){
+            widget->getNode()->setText(arg1);
+            widget->update();
+        }
+}
+
+void MainWindow::on_setColorButton_2_clicked()
+{
+    QColor chosenColor = QColorDialog::getColor();
+    QPalette p;
+    p.setColor(QPalette::Button, chosenColor);
+    ui->setColorButton_2->setPalette(p);
+    ui->setColorButton_2->setFlat(true);
+    if(widget->getNode()){
+        widget->getNode()->setColor2(chosenColor);
+    }
 }

@@ -11,11 +11,10 @@
 #include <QDebug>
 
 static const double Pi = 3.14159265358979323846264338327950288419717;
-static double TwoPi = 2.0 * Pi;
 
 
 Edge::Edge(Node *sourceNode, Node *destNode,GraphWidget *graphWidget)
-    : arrowSize(10), graph(graphWidget)
+    :  graph(graphWidget),arrowSize(10)
 {
 //    setFlag(ItemIsMovable);
     setFlag(ItemIsSelectable);
@@ -28,6 +27,7 @@ Edge::Edge(Node *sourceNode, Node *destNode,GraphWidget *graphWidget)
     dest = destNode;
     source->addEdge(this);
     dest->addEdge(this);
+    color=Qt::black;
     adjust();
 }
 
@@ -55,6 +55,12 @@ QPainterPath Edge::shape() const
     return path;
 }
 
+void Edge::SetColor(QColor color)
+{
+    this->color=color;
+    update();
+}
+
 Node *Edge::sourceNode() const
 {
     return source;
@@ -70,6 +76,7 @@ void Edge::remove()
     source->removeEdge(this);
     dest->removeEdge(this);
     graph->removeItem(this);
+    graph->removeEdge(this);
 }
 
 void Edge::adjust()
@@ -111,12 +118,12 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     if (!source || !dest)
         return;
-
+    painter->setRenderHint(QPainter::Antialiasing, true);
     QLineF line(sourcePoint, destPoint);
     if (qFuzzyCompare(line.length(), qreal(0.)))
         return;
 
-    painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    painter->setPen(QPen(color, 1.5, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter->drawLine(line);
 
 }

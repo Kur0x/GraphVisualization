@@ -11,6 +11,7 @@ class Edge : public QGraphicsItem
 public:
     Edge(Node *sourceNode, Node *destNode,GraphWidget *graphWidget);
     QPainterPath shape() const override;
+    void SetColor(QColor color);
     Node *sourceNode() const;
     Node *destNode() const;
     void remove();
@@ -29,6 +30,7 @@ private:
     QPointF sourcePoint;
     QPointF destPoint;
     qreal arrowSize;
+    QColor color;
 };
 //! [0]
 

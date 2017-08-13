@@ -54,6 +54,7 @@
 #include <QGraphicsItem>
 #include <QList>
 
+
 QT_BEGIN_NAMESPACE
 class Edge;
 class GraphWidget;
@@ -63,7 +64,7 @@ QT_END_NAMESPACE
 class Node : public QGraphicsItem
 {
 public:
-    Node(GraphWidget *graphWidget);
+    Node(GraphWidget *graphWidget,QString text = "");
 
     void addEdge(Edge *edge);
     void removeEdge(Edge *edge);
@@ -75,6 +76,15 @@ public:
     QRectF boundingRect() const override;
     QPainterPath shape() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    QString getText() const;
+    void setText(const QString &value);
+    QColor getColor() const;
+    void setColor(const QColor &value);
+    qreal getPenWidth() const;
+    void setPenWidth(const qreal &value);
+
+    QColor getColor2() const;
+    void setColor2(const QColor &value);
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
@@ -84,9 +94,13 @@ protected:
 
 private:
     QList<Edge *> edgeList;
-    QPointF newPos;
     GraphWidget *graph;
     QColor color;
+    QColor color2;
+    QString text;
+    qreal penWidth;
+    bool highlight;
+
 };
 
 #endif // NODE_H
